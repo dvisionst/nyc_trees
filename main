@@ -1,0 +1,53 @@
+// Queries used for the dashboard created using KQL and the nyc_trees dataset from Kusto Detective.
+
+Bar Chart
+nyc_trees
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| summarize Count = count() by borough
+
+Column Chart
+nyc_trees
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| where status contains "Dead"
+| summarize Count = count() by borough
+
+Multi Stat Table
+nyc_trees
+| where isempty(['_problems']) or problems in (['_problems'])
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| summarize count() by problems
+| order by count_ desc
+| limit 8 
+
+Second Column
+nyc_trees
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| summarize count() by toupper(spc_common)
+| order by count_ desc 
+| limit 15
+
+
+Pie Chart
+nyc_trees
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| summarize round(avg(tree_dbh), 2) by borough
+
+
+Map Viz
+nyc_trees
+| where isempty(['_status']) or status in (['_status'])
+| where isempty(['_species']) or spc_common  in (['_species'])
+| where borough contains "Manhattan"
+| where status contains "Dead"
+| project longitude, latitude
+| render scatterchart with (kind = map)
+
+
+Stat Table
+nyc_trees
+| summarize count()
